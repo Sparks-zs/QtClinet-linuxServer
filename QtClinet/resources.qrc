@@ -1,0 +1,60 @@
+<RCC>
+    <qresource prefix="/images">
+        <file alias="file.png">resources/images/file.png</file>
+        <file alias="folder.png">resources/images/folder.png</file>
+        <file alias="jiahao.png">resources/images/jiahao.png</file>
+    </qresource>
+    <qresource prefix="/loading">
+        <file>resources/loading/loading-0.jpg</file>
+        <file>resources/loading/loading-1.jpg</file>
+        <file>resources/loading/loading-2.jpg</file>
+        <file>resources/loading/loading-3.jpg</file>
+        <file>resources/loading/loading-4.jpg</file>
+        <file>resources/loading/loading-5.jpg</file>
+        <file>resources/loading/loading-6.jpg</file>
+        <file>resources/loading/loading-7.jpg</file>
+        <file>resources/loading/loading-8.jpg</file>
+        <file>resources/loading/loading-9.jpg</file>
+        <file>resources/loading/loading-10.jpg</file>
+        <file>resources/loading/loading-11.jpg</file>
+        <file>resources/loading/loading-12.jpg</file>
+        <file>resources/loading/loading-13.jpg</file>
+        <file>resources/loading/loading-14.jpg</file>
+        <file>resources/loading/loading-15.jpg</file>
+        <file>resources/loading/loading-16.jpg</file>
+        <file>resources/loading/loading-17.jpg</file>
+        <file>resources/loading/loading-18.jpg</file>
+        <file>resources/loading/loading-19.jpg</file>
+        <file>resources/loading/loading-20.jpg</file>
+        <file>resources/loading/loading-21.jpg</file>
+        <file>resources/loading/loading-22.jpg</file>
+        <file>resources/loading/loading-23.jpg</file>
+        <file>resources/loading/loading-24.jpg</file>
+        <file>resources/loading/loading-25.jpg</file>
+        <file>resources/loading/loading-26.jpg</file>
+        <file>resources/loading/loading-27.jpg</file>
+        <file>resources/loading/loading-28.jpg</file>
+        <file>resources/loading/loading-29.jpg</file>
+        <file>resources/loading/loading-30.jpg</file>
+        <file>resources/loading/loading-31.jpg</file>
+        <file>resources/loading/loading-32.jpg</file>
+        <file>resources/loading/loading-33.jpg</file>
+        <file>resources/loading/loading-34.jpg</file>
+        <file>resources/loading/loading-35.jpg</file>
+        <file>resources/loading/loading-36.jpg</file>
+        <file>resources/loading/loading-37.jpg</file>
+        <file>resources/loading/loading-38.jpg</file>
+        <file>resources/loading/loading-39.jpg</file>
+        <file>resources/loading/loading-40.jpg</file>
+        <file>resources/loading/loading-41.jpg</file>
+        <file>resources/loading/loading-42.jpg</file>
+        <file>resources/loading/loading-43.jpg</file>
+        <file>resources/loading/loading-44.jpg</file>
+        <file>resources/loading/loading-45.jpg</file>
+        <file>resources/loading/loading-46.jpg</file>
+        <file>resources/loading/loading-47.jpg</file>
+        <file>resources/loading/loading-48.jpg</file>
+        <file>resources/loading/loading-49.jpg</file>
+        <file>resources/loading/loading-50.jpg</file>
+    </qresource>
+</RCC>
