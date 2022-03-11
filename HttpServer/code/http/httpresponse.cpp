@@ -176,15 +176,13 @@ void HttpResponse::AddShareDir2Content_()
 {
     vector<string> str_shareDir;
     content_.append("ShareDir=");
-    GetShareDir(srcDir_, str_shareDir);
+    string dirpath = requestPost_.find("DirPath")->second;
+    GetShareDir(srcDir_ + "/" + dirpath, str_shareDir);
     if(str_shareDir.size() > 0)
     { 
         for(auto &s : str_shareDir){
             content_.append(s + ";");
         }
-    }
-    else{
-        content_.append("NULL");
     }
 }
 
@@ -193,7 +191,7 @@ void HttpResponse::AddFile2Content_()
     string filePath = requestPost_.find("FilePath")->second;
     LOG_DEBUG("%s", filePath.c_str());
         /* 判断请求的资源文件 */
-    if(stat((srcDir_ + filePath).data(), &mmFileStat_) < 0 || S_ISDIR(mmFileStat_.st_mode)) {
+    if(stat((srcDir_ + "/" + filePath).data(), &mmFileStat_) < 0 || S_ISDIR(mmFileStat_.st_mode)) {
         code_ = 404;
     }
     else if(!(mmFileStat_.st_mode & S_IROTH)) {
@@ -202,15 +200,15 @@ void HttpResponse::AddFile2Content_()
     else if(code_ == -1) { 
         code_ = 200; 
     }
-    int srcFd = open((srcDir_ + filePath).data(), O_RDONLY);
+    int srcFd = open((srcDir_ + "/" + filePath).data(), O_RDONLY);
     if(srcFd < 0) { 
         LOG_DEBUG("%s", "File NotFound!");
         return; 
     }
-    path_ = filePath;
+    path_ = srcDir_ + "/" + filePath;
     /* 将文件映射到内存提高文件的访问速度 
         MAP_PRIVATE 建立一个写入时拷贝的私有映射*/
-    LOG_DEBUG("file path %s", (srcDir_ + filePath).data());
+    LOG_DEBUG("file path %s", (srcDir_ + "/" + filePath).data());
     int* mmRet = (int*)mmap(0, mmFileStat_.st_size, PROT_READ, MAP_PRIVATE, srcFd, 0);
     if(*mmRet == -1) {
         LOG_DEBUG("%s", "File NotFound!");
@@ -220,34 +218,25 @@ void HttpResponse::AddFile2Content_()
     close(srcFd);
 }
 
-void HttpResponse::GetShareDir(string basePath, vector<string>& ret, string subDir){
+void HttpResponse::GetShareDir(string path, vector<string>& ret){
     DIR *dir;
     struct dirent *ptr;
 
-    string dirPath = basePath + '/' + subDir;
-
-    if(SubDirNumber(dirPath) == 0){     // 目录下没有文件
-        ret.push_back(subDir);
-        return;
-    }
-
-    if ((dir = opendir(dirPath.c_str())) == NULL)
+    if ((dir = opendir(path.c_str())) == NULL)
     {
         perror("Open dir error...");
-        exit(1);
-    }
-
-    while ((ptr = readdir(dir)) != NULL)    // 依次读出目录中所有文件
-    {
+    }      
+	
+    while((ptr = readdir(dir)) != NULL){
         if (strcmp(ptr->d_name, ".") == 0 || strcmp(ptr->d_name, "..") == 0)
             continue;
-        else if (ptr->d_type == 4)      // 目录
+        else if (ptr->d_type == 4)	// 目录
         {
-            GetShareDir(basePath, ret, subDir + '/' + ptr->d_name);
+            ret.push_back(ptr->d_name);
         }
         else if (ptr->d_type == 8)      // 文件
         {
-            ret.push_back(subDir + '/' + ptr->d_name);
+            ret.push_back(ptr->d_name);
         }
     }
     closedir(dir);

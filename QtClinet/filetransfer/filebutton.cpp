@@ -22,7 +22,7 @@ FileAbstract::FileAbstract(QWidget* parent)
    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 }
 
-void FileAbstract::setFileName(const QString &filename)
+void FileAbstract::setFileName(QString filename)
 {
     fileName_ = filename;
     setText(filename);
@@ -43,13 +43,10 @@ bool FileAbstract::isFolder()
     return true;
 }
 
-Folder::Folder(const QString& foldername, Folder* parent)
-    : parent_(parent)
+Folder::Folder(const QString& foldername)
 {
     setFileName(foldername);
     connect(this, SIGNAL(clicked()), this, SLOT(onClicked()));  
-
-    subFile_.reserve(5);
     setStyleSheet(
         "Folder{"
         "background:transparent;"
@@ -63,77 +60,17 @@ Folder::Folder(const QString& foldername, Folder* parent)
 
 Folder::~Folder()
 {
-    subFile_.clear();
 }
 
 void Folder::onClicked()
 {
     emit(clicked(this));
 }
-bool Folder::addSubFile(FileAbstract *child)
-{
-    if(subFile_.count(child) > 0)
-        return false;
-    subFile_.push_back(child);
-    return true;
-}
 
-QVector<FileAbstract*>* Folder::getSubFile()
-{
-    return &subFile_;
-}
-
-FileAbstract* Folder::getSubFile(const QString& filename)
-{
-    if(subFile_.size() == 0)
-        return nullptr;
-    QVector<FileAbstract*>::iterator iter;
-    for(iter = subFile_.begin(); iter!=subFile_.end(); iter++){
-        if((*iter)->getFileName() == filename)
-            return *iter;
-    }
-    return nullptr;
-}
-
-QString Folder::getFilePath()
-{
-    QString filename = getFileName();
-    if(filename == "")
-        return "";
-
-    QString path;
-    path.push_front(getFileName());
-    path.push_front("/");
-
-    Folder* parent = parent_;
-    while(parent){
-        path.push_front(parent->getFileName());
-        if(parent->parent())
-            path.push_front("/");
-        parent = parent->parent();
-    };
-
-    return path;
-}
-
-QString Folder::getDirPath()
-{
-    QString path;
-    Folder* parent = parent_;
-    while(parent){
-        path.push_front(parent->getFileName());
-        if(parent->parent())
-            path.push_front("/");
-        parent = parent->parent();
-    };
-    return path;
-}
-
-File::File(const QString& filename, Folder *parent)
-    : parent_(parent)
+File::File(const QString& filename)
 {
     setFileName(filename);
-    connect(this, SIGNAL(clicked()), this, SLOT(clicked()));
+    connect(this, SIGNAL(clicked()), this, SLOT(onClicked()));
 
     setStyleSheet(
         "File{"
@@ -144,44 +81,19 @@ File::File(const QString& filename, Folder *parent)
         "text-align: bottom;"
         "}"
     );
-
-
 }
 
-void File::setContent(const QByteArray &content)
+void File::setContent(QByteArray content)
 {
     content_ = content;
 }
 
-const QByteArray& File::getContent() const
+QByteArray File::getContent() const
 {
     return content_;
 }
 
-void File::clicked()
+void File::onClicked()
 {
     emit clicked(this);
-}
-
-QString File::getFilePath()
-{
-    QString path;
-    path.push_front(getFileName());
-    path.push_front("/");
-    path.push_front(getDirPath());
-
-    return path;
-}
-
-QString File::getDirPath()
-{
-    QString path;
-    Folder* parent = parent_;
-    while(parent){
-        path.push_front(parent->getFileName());
-        if(parent->parent())
-            path.push_front("/");
-        parent = parent->parent();
-    };
-    return path;
 }

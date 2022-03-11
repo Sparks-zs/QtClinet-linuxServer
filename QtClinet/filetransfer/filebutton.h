@@ -24,7 +24,7 @@ class FileAbstract : public QPushButton
 Q_OBJECT
 public:
     FileAbstract(QWidget* parent=nullptr);
-    void setFileName(const QString& filename);
+    void setFileName(QString filename);
     QString getFileName() { return fileName_; }
     int getFileType();
     bool isFolder();
@@ -40,48 +40,34 @@ class Folder : public FileAbstract
 {
     Q_OBJECT
 public:
-    explicit Folder(const QString& foldername, Folder *parent=nullptr);
+    explicit Folder(const QString& foldername);
     ~Folder();
-    QVector<FileAbstract*>* getSubFile();
-    FileAbstract* getSubFile(const QString& foldername);
-    bool addSubFile(FileAbstract* child);
-//    void pushFileName(QString path);
-    QString getFilePath();
-    Folder* parent() {return parent_;}
-    QString getDirPath();
 
 signals:
     void clicked(Folder*);
 
-protected slots:
+private slots:
     void onClicked();
-
-private:
-    QVector<FileAbstract*> subFile_;
-    Folder* parent_;
 };
 
 class File : public FileAbstract
 {
     Q_OBJECT
 public:
-    explicit File(const QString& filename, Folder *parent=nullptr);
-    void setContent(const QByteArray& content);
-    const QByteArray& getContent() const;
+    explicit File(const QString& filename);
+    void setContent(QByteArray content);
+    QByteArray getContent() const;
     int getContentType();
-    QString getFilePath();
-    QString getDirPath();
 
 signals:
     void clicked(File*);
-    void downLoad(File*);
 
 private slots:
-    void clicked();
+    void onClicked();
 
 private:
-    QByteArray content_;     // 文件内容
-    Folder* parent_;
+    QByteArray content_;
+
 };
 
 

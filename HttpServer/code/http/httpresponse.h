@@ -35,7 +35,7 @@ private:
 
 
     std::string GetFileType_();         // 获取文件类型
-    void GetShareDir(std::string dirPath, std::vector<std::string>& ret, std::string subDir="");
+    void GetShareDir(std::string dirPath, std::vector<std::string>& ret);
     size_t SubDirNumber(std::string dirPath);
 
     void AddShareDir2Content_();

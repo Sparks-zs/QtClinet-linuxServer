@@ -130,7 +130,7 @@ void HttpConn::parseMsg_(const QByteArray& body, QMap<QString, QByteArray>& buf)
         }
     }
     assert(j <= i);
-    if(buf.count(key) == 0 && j < i) {
+    if(j <= i) {
         value = body.mid(j, i - j);
         buf[key] = value;
     }

@@ -10,7 +10,6 @@
 #include <QTimer>
 #include <QPixmap>
 #include <QTextEdit>
-#include <QLayout>
 #include <QFile>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -21,6 +20,7 @@
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
 
+#include "flowlayout.h"
 #include "filebutton.h"
 #include "tcp/tcpsocket.h"
 #include "toolbutton.h"
@@ -29,74 +29,49 @@ class FileTransfer : public QWidget
 {
     Q_OBJECT
 public:
-    static FileTransfer* getInstance();
-    bool isDir(const QString& filename_);
-    void initDirFile_(const QStringList& list);
-
-    bool event(QEvent *event) override;
-    void contextMenuEvent(QContextMenuEvent *event) override;
+    FileTransfer(QWidget *parent = nullptr);
+    ~FileTransfer();
+    void initGUI_();
+    void initTcp_();
+    void setupDirectory(const QStringList& lines);
 
 private slots:
     // 界面切换
-    void addFile2Stack(Folder* parent);
     void onSwitchWidget(QWidget* widget);
     void onAnimationFinished();
     void showFileContent();
-//    void showToolWidget();
-    void onClickedUploadButton();
-    void onClickedDownloadButton();
 
     // 网络响应
     void connectServer_();
-    void onFileClicked_(File* file);
-    void sendFilePath_(QString filename);
-    void getRootFile_();
+    void onConnected();
+    void getDirectoryFromServer(const QString& path);    // 从服务器获取目录
+    void onClickedFile_(File* file);
+    void onClickedFolder_(Folder* folder);
     void parseDatafromServer();
     void errorDisplay(int socketError, const QString& message);
+    void onClickedUploadButton();
+    void onClickedDownloadButton();
 
-    // 动画加载
-    void setProgressBarValue(int value);
-    void startLoading();
-    void stopLoading();
-    void updateLoading();
-    void startTimer();
-    void stopTimer();
+    QString getCurPath();   // 当前目录
+    QString getUpPath();    // 上一个目录
+    bool isDir(const QString& filename_);
+    QString joinPath(const QString& p1, const QString& p2);
+    bool event(QEvent *event) override;
+    void contextMenuEvent(QContextMenuEvent *event) override;
 
 private:
-    FileTransfer(QWidget *parent = nullptr);
-    void initGUI_();
-    void setupDirFile(const QStringList& lines, int idx, Folder* parent);
-    void initTcp_();
-
-    static FileTransfer* instance_;
-    const static QMap<QString, int> customCode;
-
-    QStackedWidget* stackWidget_;
     QVBoxLayout* layout_;
-
-    // 下载相关
-//    QWidget* toolWidget;
-//    QPushButton* uploadButton_;
-//    QPushButton* downloadButton_;
-//    ToolButton* toolButton_;
     QAction* upLoadAct_;
-
-    // 加载相关
-    QWidget* loadWidget_;
-    QVBoxLayout* loadLayout_;
-    QStackedWidget* loadStackWidget_;
-    QProgressBar* loadingBar_;
-    QTimer* timer_;
-    QLabel* loadingLabel_;
-    int loadingIndex_;
-
-    Folder* rootFolder_;  // 根目录
-    File* file_;        // 打开的文件
-    Folder* curFolder_;
-    int preIndex_;      // 上一级界面索引
-    bool removeFlag_;  // 是否删除移除的画面
+    QWidget* curWidget_;
+    QWidget* prevWidget_;
+    QStackedWidget* stackedWidget_;
+    bool isFileContent;     // 当前显示页面为文件内容
     TcpSocket* tcp_;
+    File* curFile_;        // 打开的文件
+    QVector<QString> curPath_;   // 当前界面路径
 
+    // 自定义协议
+    const static QMap<QString, int> customCode;
 };
 
 #endif // FILECONTROL_H

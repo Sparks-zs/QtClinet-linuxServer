@@ -132,6 +132,7 @@ void HttpRequest::ParsePost_() {
 
     switch(customCode_){
     case 0:
+	ParseFromUrlencoded_();
         break;
     case 1:
         ParseFromUrlencoded_();

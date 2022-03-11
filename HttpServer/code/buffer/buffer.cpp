@@ -122,6 +122,8 @@ const char* Buffer::BeginPtr_() const {
     return &*buffer_.begin();
 }
 
+// 如果缓冲区已读取的空间+可写入的空间 < 要添加的字符数，则直接扩大缓冲区
+// 否则将缓冲区待读取的数据复制到缓冲区起始位置，再将待添加的数据直接添加到末尾处
 void Buffer::MakeSpace_(size_t len) {
     if(WritableBytes() + PrependableBytes() < len) {
         buffer_.resize(writePos_ + len + 1);
